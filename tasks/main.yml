@@ -1,0 +1,54 @@
+---
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+  register: os_variables
+
+- name: set facts for playbook execution
+  set_fact:
+    elasticsearch_inventory_count: "{{ groups['elasticsearch'] | length }}"
+    elasticsearch_checksum: "{{ lookup('url', elasticsearch_package_sha512) }}"
+
+- name: Download elasticsearch package for {{ ansible_os_family }}
+  get_url:
+    url: "{{ elasticsearch_package_repository }}"
+    dest: "{{ elasticsearch_package_path }}"
+    force: yes
+    checksum: "{{ elasticsearch_checksum }}"
+  when:
+    - os_variables is succeeded
+    - elasticsearch_package_repository is defined
+    - elasticsearch_package_path is defined
+    - elasticsearch_inventory_count >= elasticsearch_cluster_expected_nodes
+  register: elasticsearch_package_downloaded
+
+# Setup/install tasks.
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-Ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+# Configure node using template file
+- name: configure elasticsearch settings
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch.yml
+    force: yes
+    mode: 0644
+    owner:
+    group:
+  vars:
+    elasticsearch_unicast_inventory: "{{ groups['elasticsearch'] | default(['127.0.0.1']) }}"
+    node_master_enabled: "{{ hostvars[inventory_hostname].node_master }}"
+    node_data_enabled: "{{ hostvars[inventory_hostname].node_data }}"
+    node_client_enabled: "{{ hostvars[inventory_hostname].node_client }}"
+  when: elasticsearch_installed is succeeded
+  register: elasticsearch_settings
+
+# Start service.
+- name: Ensure elasticsearch is started and enabled to start at boot
+  service: name=elasticsearch state=started enabled=yes
+  when: elasticsearch_settings is succeededarruko

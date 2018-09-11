@@ -7,5 +7,7 @@
   yum:
     name: "{{ elasticsearch_package_path }}"
     state: "{{ elasticsearch_package_state }}"
-  when: elasticsearch_package_downloaded is succeeded
+  when: 
+    - elasticsearch_package_downloaded is succeeded
+    - elasticsearch_checksum_verification is succeeded
   register: elasticsearch_installed

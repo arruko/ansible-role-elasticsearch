@@ -1,6 +1,7 @@
 ---
-elasticsearch_username: ansible
-elasticsearch_package_repository: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb"
-elasticsearch_package_sha512: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb.sha512"
-elasticsearch_package_path: "/tmp/elasticsearch-{{ elasticsearch_version }}.deb"
+elasticsearch_version: 6.4.0
+elasticsearch_package_name: "elasticsearch-{{ elasticsearch_version }}.deb"
+elasticsearch_package_repository: "https://artifacts.elastic.co/downloads/elasticsearch/{{ elasticsearch_package_name }}"
+elasticsearch_package_path: "/tmp/{{ elasticsearch_package_name }}"
 elasticsearch_package_state: present
+elasticsearch_package_sha512: "https://artifacts.elastic.co/downloads/elasticsearch/{{ elasticsearch_package_name }}.sha512"

@@ -1,6 +1,0 @@
----
-elasticsearch_username: ansible
-elasticsearch_package_repository: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb"
-elasticsearch_package_sha512: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb.sha512"
-elasticsearch_package_path: "/tmp/elasticsearch-{{ elasticsearch_version }}.deb"
-elasticsearch_package_state: present

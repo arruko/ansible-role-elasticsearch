@@ -1,0 +1,11 @@
+---
+- name: Update yum cache.
+  yum: update_cache=yes
+  changed_when: false
+
+- name: Ensure elasticsearch is installed.
+  yum:
+    name: "{{ elasticsearch_package_path }}"
+    state: "{{ elasticsearch_package_state }}"
+  when: elasticsearch_package_downloaded is succeeded
+  register: elasticsearch_installed

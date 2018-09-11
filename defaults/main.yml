@@ -1,0 +1,32 @@
+---
+elasticsearch_version: 6.4.0
+elasticsearch_cluster_name: "els"
+elasticsearch_cluster_minimun_master_nodes: 1
+elasticsearch_cluster_recover_after_nodes: 1
+elasticsearch_cluster_recover_after_time: "1m"
+elasticsearch_cluster_expected_nodes: 1
+elasticsearch_node_http_port: 9200
+elasticsearch_node_swap_memory_disabled: true
+
+# Database data model for static indexes
+elasticsearch_cluster_indexes:
+  - name: index_name
+    shards: 1
+    replicas: 1
+    mappings:
+      - name: mapping_name
+        properties:
+          name: property_name
+          type: string
+
+# Database templates for dynamic indexing
+elasticsearch_cluster_templates:
+  - name: template_name
+    alias: "log_*"
+    shards: 1
+    replicas: 1
+    mappings:
+      - name: mapping_name
+        properties:
+          name: property_name
+          type: string

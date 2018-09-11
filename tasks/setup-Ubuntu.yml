@@ -1,0 +1,12 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=86400
+  changed_when: false
+
+- name: Ensure elasticsearch is installed.
+  apt:
+    deb: "{{ elasticsearch_package_path }}"
+    state: "{{ elasticsearch_package_state }}"
+    sudo: true
+  when: elasticsearch_package_downloaded is succeeded
+  register: elasticsearch_installed
